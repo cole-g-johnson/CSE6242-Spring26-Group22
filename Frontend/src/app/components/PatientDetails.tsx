@@ -1,4 +1,4 @@
-import { User, Pill, AlertCircle, CheckCircle } from 'lucide-react';
+import { User, Pill, AlertCircle, AlertTriangle } from 'lucide-react';
 
 interface Patient {
   id: string;
@@ -8,7 +8,7 @@ interface Patient {
   hasOtherPrescriptions: boolean;
   mainPrescriptions: string[];
   riskScore: number;
-  riskCategory: 'Severe' | 'Non-Severe';
+  riskCategory: 'Critical/permanent' | 'Severe but recoverable';
 }
 
 interface PatientDetailsProps {
@@ -51,34 +51,34 @@ export function PatientDetails({ patient }: PatientDetailsProps) {
       <div className="bg-white rounded-lg border border-slate-200 p-6">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-slate-900">Adverse Event Risk</h3>
-          {patient.riskCategory === 'Severe' ? (
+          {patient.riskCategory === 'Critical/permanent' ? (
             <AlertCircle className="w-6 h-6 text-red-600" />
           ) : (
-            <CheckCircle className="w-6 h-6 text-emerald-600" />
+            <AlertTriangle className="w-6 h-6 text-amber-600" />
           )}
         </div>
 
         <div className="flex flex-col items-center justify-center py-8">
           <div className={`text-7xl mb-4 ${
-            patient.riskCategory === 'Severe' ? 'text-red-600' : 'text-emerald-600'
+            patient.riskCategory === 'Critical/permanent' ? 'text-red-600' : 'text-amber-600'
           }`}>
             {patient.riskScore}%
           </div>
 
           <div className={`px-4 py-2 rounded-lg mb-6 ${
-            patient.riskCategory === 'Severe'
+            patient.riskCategory === 'Critical/permanent'
               ? 'bg-red-100 text-red-700'
-              : 'bg-emerald-100 text-emerald-700'
+              : 'bg-amber-100 text-amber-700'
           }`}>
             {patient.riskCategory} Risk
           </div>
 
           <div className="w-full max-w-md">
             <div className="flex items-center justify-between text-xs text-slate-600 mb-2">
-              <span>Non-Severe</span>
-              <span>Severe</span>
+              <span>Severe but recoverable</span>
+              <span>Critical/permanent</span>
             </div>
-            <div className="w-full h-4 bg-gradient-to-r from-emerald-500 via-yellow-500 to-red-500 rounded-full relative">
+            <div className="w-full h-4 bg-gradient-to-r from-amber-500 to-red-500 rounded-full relative">
               <div
                 className="absolute w-1 h-6 bg-slate-900 rounded-full -top-1"
                 style={{ left: `${patient.riskScore}%`, transform: 'translateX(-50%)' }}
@@ -86,8 +86,6 @@ export function PatientDetails({ patient }: PatientDetailsProps) {
             </div>
           </div>
         </div>
-
-        {/* Removed risk classification text and model information */}
       </div>
 
       <div className="bg-white rounded-lg border border-slate-200 p-6">
