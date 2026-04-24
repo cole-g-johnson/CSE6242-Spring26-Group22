@@ -3,6 +3,7 @@ import { TopNavigation } from './components/TopNavigation';
 import { PatientList } from './components/PatientList';
 import { PatientDetails } from './components/PatientDetails';
 import { DrugSwapPanel } from './components/DrugSwapPanel';
+import { DrugRecommender } from './components/DrugRecommender';
 import { parsePatientsCSV, Patient } from '../utils/csvParser';
 
 export default function App() {
