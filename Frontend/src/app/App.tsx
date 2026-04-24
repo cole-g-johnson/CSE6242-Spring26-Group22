@@ -7,6 +7,7 @@ import { DrugRecommender } from './components/DrugRecommender';
 import { parsePatientsCSV, Patient } from '../utils/csvParser';
 
 export default function App() {
+  const [searchTerm, setSearchTerm] = useState('');
   const [selectedPatientId, setSelectedPatientId] = useState<string>('');
   const [patients, setPatients] = useState<Patient[]>([]);
   const [isLoading, setIsLoading] = useState(true);
