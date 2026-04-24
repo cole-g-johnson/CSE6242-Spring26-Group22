@@ -56,8 +56,8 @@ export default function App() {
           </div>
 
           <div className="w-96 overflow-y-auto">
-            {/* We no longer pass counterfactuals down! */}
             {selectedPatient && <DrugSwapPanel patient={selectedPatient} />}
+            {selectedPatient && <DrugRecommender patient={selectedPatient} />}
           </div>
         </div>
       </div>
