@@ -16,9 +16,14 @@ app.add_middleware(
 )
 
 # 2. Load the Model
-model_path = "xgboost_model_final3.json"
+print("🚀 API Starting up...")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+print("📦 Attempting to load XGBoost model...")
+model_path = os.path.join(BASE_DIR, "xgboost_model_final3.json")
 model = xgb.XGBClassifier()
 model.load_model(model_path)
+print("✅ Model loaded successfully!")
 
 # 3. Extract the exact feature list dynamically from the model!
 with open(model_path, "r") as f:
