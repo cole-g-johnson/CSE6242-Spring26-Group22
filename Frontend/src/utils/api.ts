@@ -53,7 +53,8 @@ export interface RecommendAPIResponse {
 export const fetchSwapRecommendations = async (
   patient: Patient, 
   currentRxList: string[],
-  drugToRemove: string
+  drugToRemove: string,
+  drugsToTest: string[] = [] // NEW: Pass the clinician's choices
 ): Promise<RecommendAPIResponse> => {
   const payload = {
     primaryid: parseInt(patient.id),
@@ -62,10 +63,11 @@ export const fetchSwapRecommendations = async (
     wt_kg: patient.weight,
     other_rx: patient.hasOtherPrescriptions ? 1 : 0,
     current_rx_list: currentRxList,
-    drug_to_remove: drugToRemove
+    drug_to_remove: drugToRemove,
+    drugs_to_test: drugsToTest // NEW
   };
 
-  const response = await fetch('https://counterfactual-api.onrender.com/recommend_swaps', {
+  const response = await fetch('https://YOUR-RENDER-APP-NAME.onrender.com/recommend_swaps', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
