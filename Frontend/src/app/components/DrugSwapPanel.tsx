@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { TrendingDown, AlertCircle, CheckCircle, X, Plus } from 'lucide-react';
-import { Patient } from '../utils/csvParser';
-import { fetchDynamicCounterfactual, APIResponse } from '../utils/api';
+import { Patient } from '../../utils/csvParser';
+import { fetchDynamicCounterfactual, APIResponse } from '../../utils/api';
 
 // Paste your 550 drugs from the notebook here!
 const ALL_DRUGS = [
