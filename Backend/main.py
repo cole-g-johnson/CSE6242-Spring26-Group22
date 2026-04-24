@@ -81,4 +81,41 @@ class SwapRecommendationRequest(BaseModel):
     current_rx_list: list[str] 
     drug_to_remove: str        
 
-@app.post("/recommend_
+@app.post("/recommend_swaps")
+def recommend_swaps(req: SwapRecommendationRequest):
+    # 1. Reconstruct base demographics
+    base_features = [req.primaryid, req.sex_bin, req.age_years, req.wt_kg, req.other_rx]
+    
+    # 2. Get the list of drugs they are keeping
+    remaining_drugs = set(req.current_rx_list)
+    if req.drug_to_remove in remaining_drugs:
+        remaining_drugs.remove(req.drug_to_remove)
+        
+    # 3. Find out what drugs are available to test
+    available_drugs = [d for d in DRUG_FEATURES if d not in remaining_drugs]
+    
+    # 4. Build a massive 2D matrix
+    batch_matrix = []
+    for test_drug in available_drugs:
+        test_scenario_set = remaining_drugs.copy()
+        test_scenario_set.add(test_drug)
+        drug_vector = [1 if d in test_scenario_set else 0 for d in DRUG_FEATURES]
+        batch_matrix.append(base_features + drug_vector)
+        
+    X_batch = np.array(batch_matrix)
+    
+    # 5. Run XGBoost on all scenarios simultaneously
+    probabilities = model.predict_proba(X_batch)[:, 1]
+    
+    # 6. Pair the test drugs with their new scores and sort them
+    results = [{"drug": available_drugs[i], "new_risk": float(probabilities[i])} for i in range(len(available_drugs))]
+    results = sorted(results, key=lambda x: x["new_risk"])
+    
+    # 7. Return the Top 5 safest swaps
+    top_5 = results[:5]
+    
+    return {
+        "patient_id": req.primaryid,
+        "removed_drug": req.drug_to_remove,
+        "recommendations": top_5
+    }
