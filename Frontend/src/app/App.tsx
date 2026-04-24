@@ -50,10 +50,10 @@ export default function App() {
       <TopNavigation searchTerm={searchTerm} onSearchChange={setSearchTerm} />
 
       <div className="flex flex-1 overflow-hidden">
-        <PatientList
-          patients={patients}
-          selectedPatientId={selectedPatientId}
-          onSelectPatient={setSelectedPatientId}
+        <PatientList 
+          patients={filteredPatients} 
+          selectedPatientId={selectedPatientId} 
+          onSelectPatient={setSelectedPatientId} 
         />
 
         <div className="flex-1 flex gap-6 p-6 overflow-hidden">
