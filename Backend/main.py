@@ -61,7 +61,7 @@ def run_counterfactual(req: CounterfactualRequest):
     X_inference = np.array([base_features + drug_vector])
     
     risk_prob = float(model.predict_proba(X_inference)[0][1])
-    risk_class = "CRITICAL" if risk_prob >= OPTIMAL_THRESHOLD else "SERIOUS"
+    risk_class = "Critical/permanent" if risk_prob >= OPTIMAL_THRESHOLD else "Severe but recoverable"
     
     return {
         "patient_id": req.primaryid,
