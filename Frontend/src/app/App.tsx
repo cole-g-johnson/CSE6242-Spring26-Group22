@@ -39,6 +39,10 @@ export default function App() {
 
   const selectedPatient = patients.find(p => p.id === selectedPatientId);
 
+  const filteredPatients = patients.filter(patient => 
+    patient.id.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   if (isLoading) return <div className="p-8 text-center">Loading patient data...</div>;
 
   return (
