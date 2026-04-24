@@ -22,7 +22,7 @@ export const fetchDynamicCounterfactual = async (
     rx_list: newRxList 
   };
 
-  const response = await fetch('https://YOUR-RENDER-APP-NAME.onrender.com/counterfactual', {
+  const response = await fetch('https://counterfactual-api.onrender.com/counterfactual', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ export const fetchSwapRecommendations = async (
     drug_to_remove: drugToRemove
   };
 
-  const response = await fetch('https://YOUR-RENDER-APP-NAME.onrender.com/recommend_swaps', {
+  const response = await fetch('https://counterfactual-api.onrender.com/counterfactual', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
