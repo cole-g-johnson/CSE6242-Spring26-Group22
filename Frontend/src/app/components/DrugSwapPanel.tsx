@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { AlertCircle, CheckCircle, X, Search } from 'lucide-react';
+import { AlertCircle, AlertTriangle, X, Search } from 'lucide-react';
 import { Patient } from '../../utils/csvParser';
 import { fetchDynamicCounterfactual, APIResponse } from '../../utils/api';
 
@@ -149,7 +149,7 @@ export function DrugSwapPanel({ patient }: DrugSwapPanelProps) {
 
       {/* Results UI */}
       {simulationResult && (
-        <div className={`p-5 rounded-lg border ${simulationResult.new_class === 'CRITICAL' ? 'bg-red-50 border-red-200' : 'bg-emerald-50 border-emerald-200'}`}>
+        <div className={`p-5 rounded-lg border ${simulationResult.new_class === 'Critical/permanent' ? 'bg-red-50 border-red-200' : 'bg-amber-50 border-amber-200'}`}>
           <h4 className="text-sm font-semibold mb-3">Simulation Results</h4>
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm text-slate-600">Original Risk:</span>
@@ -161,12 +161,12 @@ export function DrugSwapPanel({ patient }: DrugSwapPanelProps) {
           </div>
           
           <div className="flex items-center gap-2 pt-3 border-t border-slate-200/50">
-             {simulationResult.new_class === 'CRITICAL' ? (
+             {simulationResult.new_class === 'Critical/permanent' ? (
                 <AlertCircle className="w-5 h-5 text-red-600" />
               ) : (
-                <CheckCircle className="w-5 h-5 text-emerald-600" />
+                <AlertTriangle className="w-5 h-5 text-amber-600" />
               )}
-             <span className={`font-semibold ${simulationResult.new_class === 'CRITICAL' ? 'text-red-700' : 'text-emerald-700'}`}>
+             <span className={`font-semibold ${simulationResult.new_class === 'Critical/permanent' ? 'text-red-700' : 'text-amber-700'}`}>
                Predicted Class: {simulationResult.new_class}
              </span>
           </div>
