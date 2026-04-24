@@ -47,7 +47,7 @@ export default function App() {
 
   return (
     <div className="size-full flex flex-col bg-slate-50">
-      <TopNavigation />
+      <TopNavigation searchTerm={searchTerm} onSearchChange={setSearchTerm} />
 
       <div className="flex flex-1 overflow-hidden">
         <PatientList
