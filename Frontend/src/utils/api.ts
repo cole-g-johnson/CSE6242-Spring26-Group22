@@ -21,7 +21,7 @@ export const fetchDynamicCounterfactual = async (
   };
 
   // Replace with your actual Render URL
-  const response = await fetch('https://nodose-api.onrender.com/counterfactual', {
+  const response = await fetch('https://counterfactual-api.onrender.com', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
