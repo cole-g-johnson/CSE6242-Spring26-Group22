@@ -1,5 +1,6 @@
 fastapi
 uvicorn
 xgboost==1.7.5
+scikit-learn
 pydantic
 numpy==1.26.4
