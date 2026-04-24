@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { TrendingDown, AlertCircle, CheckCircle, X, Plus } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { AlertCircle, CheckCircle, X, Search } from 'lucide-react';
 import { Patient } from '../../utils/csvParser';
 import { fetchDynamicCounterfactual, APIResponse } from '../../utils/api';
 
@@ -13,34 +13,55 @@ interface DrugSwapPanelProps {
 }
 
 export function DrugSwapPanel({ patient }: DrugSwapPanelProps) {
-  // State for the drugs currently being simulated
+  // Active state
   const [activeDrugs, setActiveDrugs] = useState<string[]>([]);
-  const [selectedDropdownDrug, setSelectedDropdownDrug] = useState<string>('');
   
-  // State for the API
+  // NEW: Searchable Dropdown State
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  
+  // API state
   const [isSimulating, setIsSimulating] = useState(false);
   const [simulationResult, setSimulationResult] = useState<APIResponse | null>(null);
 
-  // Reset the panel whenever a new patient is clicked
+  // Reset panel on new patient
   useEffect(() => {
     setActiveDrugs(patient.mainPrescriptions || []);
     setSimulationResult(null);
+    setSearchTerm('');
   }, [patient]);
 
-  // Handle adding a drug from the dropdown
-  const handleAddDrug = () => {
-    if (selectedDropdownDrug && !activeDrugs.includes(selectedDropdownDrug)) {
-      setActiveDrugs([...activeDrugs, selectedDropdownDrug]);
-      setSelectedDropdownDrug('');
+  // NEW: Close dropdown if user clicks outside of it
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // NEW: Filter drugs based on search (and remove ones already active)
+  const filteredDrugs = ALL_DRUGS.filter(drug => 
+    drug.toLowerCase().includes(searchTerm.toLowerCase()) && 
+    !activeDrugs.includes(drug)
+  );
+
+  // Handle adding a drug directly from the search list
+  const handleAddDrug = (drugToAdd: string) => {
+    if (!activeDrugs.includes(drugToAdd)) {
+      setActiveDrugs([...activeDrugs, drugToAdd]);
+      setSearchTerm(''); // Clear search bar
+      setIsDropdownOpen(false); // Close dropdown
     }
   };
 
-  // Handle removing a drug
   const handleRemoveDrug = (drugToRemove: string) => {
     setActiveDrugs(activeDrugs.filter(d => d !== drugToRemove));
   };
 
-  // Trigger the API Call
   const handleSimulate = async () => {
     setIsSimulating(true);
     try {
@@ -63,38 +84,53 @@ export function DrugSwapPanel({ patient }: DrugSwapPanelProps) {
         </p>
       </div>
 
-      {/* Drug Selection UI */}
       <div className="bg-white p-4 rounded-lg border border-slate-200">
-        <div className="flex gap-2 mb-4">
-          <select 
-            className="flex-1 p-2 border rounded text-sm"
-            value={selectedDropdownDrug}
-            onChange={(e) => setSelectedDropdownDrug(e.target.value)}
-          >
-            <option value="">Select a drug to add...</option>
-            {ALL_DRUGS.map(drug => (
-              <option key={drug} value={drug} disabled={activeDrugs.includes(drug)}>
-                {drug}
-              </option>
-            ))}
-          </select>
-          <button 
-            onClick={handleAddDrug}
-            disabled={!selectedDropdownDrug}
-            className="bg-slate-800 text-white p-2 rounded disabled:opacity-50"
-          >
-            <Plus className="w-5 h-5" />
-          </button>
+        
+        {/* NEW: Searchable Dropdown UI */}
+        <div className="relative mb-4" ref={dropdownRef}>
+          <div className="relative">
+            <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+            <input
+              type="text"
+              className="w-full pl-9 pr-4 py-2 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+              placeholder="Search to add medication..."
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setIsDropdownOpen(true);
+              }}
+              onClick={() => setIsDropdownOpen(true)}
+            />
+          </div>
+
+          {/* The Popup List */}
+          {isDropdownOpen && (
+            <div className="absolute z-10 w-full mt-1 bg-white border border-slate-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+              {filteredDrugs.length > 0 ? (
+                filteredDrugs.map(drug => (
+                  <button
+                    key={drug}
+                    onClick={() => handleAddDrug(drug)}
+                    className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-teal-50 hover:text-teal-900 transition-colors"
+                  >
+                    {drug}
+                  </button>
+                ))
+              ) : (
+                <div className="px-4 py-3 text-sm text-slate-500 text-center">
+                  No matching medications found.
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Current Drug Badges */}
         <div className="flex flex-wrap gap-2">
           {activeDrugs.map(drug => (
-            <span key={drug} className="flex items-center gap-1 bg-slate-100 text-slate-700 px-3 py-1 rounded-full text-xs border border-slate-200">
+            <span key={drug} className="flex items-center gap-1 bg-slate-100 text-slate-700 px-3 py-1 rounded-full text-xs border border-slate-200 hover:bg-red-50 hover:text-red-700 hover:border-red-200 transition-colors group cursor-pointer" onClick={() => handleRemoveDrug(drug)}>
               {drug}
-              <button onClick={() => handleRemoveDrug(drug)} className="hover:text-red-500">
-                <X className="w-3 h-3" />
-              </button>
+              <X className="w-3 h-3 text-slate-400 group-hover:text-red-500" />
             </span>
           ))}
           {activeDrugs.length === 0 && (
@@ -103,7 +139,6 @@ export function DrugSwapPanel({ patient }: DrugSwapPanelProps) {
         </div>
       </div>
 
-      {/* Simulate Button */}
       <button 
         onClick={handleSimulate}
         disabled={isSimulating}
@@ -139,4 +174,5 @@ export function DrugSwapPanel({ patient }: DrugSwapPanelProps) {
       )}
     </div>
   );
+}
 }
