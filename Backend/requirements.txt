@@ -1,5 +1,5 @@
 fastapi
 uvicorn
-xgboost
+xgboost==1.7.5
 pydantic
-numpy
+numpy==1.26.4
