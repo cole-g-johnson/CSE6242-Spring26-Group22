@@ -108,7 +108,7 @@ export const parsePatientsCSV = (csvText: string): Patient[] => {
                 hasOtherPrescriptions: row.other_rx === '1',
                 mainPrescriptions: mainPrescriptions,
                 riskScore: (parseFloat(row.risk_score) * 100).toFixed(2),
-                riskCategory: row.target_label === '1' ? 'Severe' : 'Non-Severe',
+                riskCategory: row.target_label === '1' ? 'Critical/permanent' : 'Severe but recoverable',
               };
             });
           resolve(patients);
