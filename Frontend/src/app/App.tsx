@@ -14,7 +14,7 @@ export default function App() {
     const loadData = async () => {
       try {
         // Only load the patients now!
-        const patientsResponse = await fetch('/data/pool_critical.csv');
+        const patientsResponse = await fetch(`${import.meta.env.BASE_URL}data/pool_critical.csv`);
         if (!patientsResponse.ok) throw new Error('Failed to fetch patients');
         
         const patientsText = await patientsResponse.text();
