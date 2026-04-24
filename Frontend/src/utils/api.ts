@@ -67,7 +67,7 @@ export const fetchSwapRecommendations = async (
     drugs_to_test: drugsToTest // NEW
   };
 
-  const response = await fetch('https://YOUR-RENDER-APP-NAME.onrender.com/recommend_swaps', {
+  const response = await fetch('https://counterfactual-api.onrender.com/recommend_swaps', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
