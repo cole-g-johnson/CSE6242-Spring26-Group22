@@ -175,4 +175,3 @@ export function DrugSwapPanel({ patient }: DrugSwapPanelProps) {
     </div>
   );
 }
-}
