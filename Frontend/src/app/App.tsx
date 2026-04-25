@@ -61,7 +61,7 @@ export default function App() {
             {selectedPatient && <PatientDetails patient={selectedPatient} />}
           </div>
 
-          <div className="w-96 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto">
             {selectedPatient && <DrugSwapPanel patient={selectedPatient} />}
             {selectedPatient && <DrugRecommender patient={selectedPatient} />}
           </div>
