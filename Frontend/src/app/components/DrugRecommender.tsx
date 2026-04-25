@@ -162,54 +162,47 @@ export function DrugRecommender({ patient }: DrugRecommenderProps) {
       {recommendations.length > 0 && (
         <div className="mt-4 bg-white rounded-lg border border-indigo-200 overflow-hidden shadow-sm flex flex-col">
           
-          {/* 🌟 FIX: Dual-Scroll Container */}
-          {/* overflow-auto handles BOTH horizontal and vertical scrolling */}
-          <div className="overflow-auto max-h-60">
+          {/* Vertical Scroll Only */}
+          <div className="overflow-y-auto max-h-60 relative">
             
-            {/* min-w-[450px] forces the horizontal scrollbar to appear if the screen gets too narrow */}
-            <div className="min-w-[450px]">
-              
-              {/* Sticky Header: Stays glued to the top while scrolling vertically! */}
-              <div className="sticky top-0 z-10 bg-indigo-50 px-4 py-3 text-xs font-semibold text-indigo-800 border-b border-indigo-200 flex justify-between shadow-sm">
-                <span>Ranked Clinical Options</span>
-                <span>Predicted Risk</span>
-              </div>
-              
-              <div className="divide-y divide-slate-100">
-                {recommendations.map((rec, index) => {
-                  
-                  const newRiskPct = rec.new_risk * 100;
-                  const isReduction = newRiskPct < patient.riskScore;
-                  const isIncrease = newRiskPct > patient.riskScore;
+            {/* Sticky Header */}
+            <div className="sticky top-0 z-10 bg-indigo-50 px-4 py-3 text-xs font-semibold text-indigo-800 border-b border-indigo-200 flex justify-between shadow-sm">
+              <span>Ranked Clinical Options</span>
+              <span>Predicted Risk</span>
+            </div>
+            
+            <div className="divide-y divide-slate-100">
+              {recommendations.map((rec, index) => {
+                
+                const newRiskPct = rec.new_risk * 100;
+                const isReduction = newRiskPct < patient.riskScore;
+                const isIncrease = newRiskPct > patient.riskScore;
 
-                  return (
-                    // Added bg-white so rows look clean when sliding under the sticky header
-                    <div key={rec.drug} className="p-3 flex items-center justify-between hover:bg-slate-50 transition-colors bg-white">
-                      <div className="flex items-center gap-3">
-                        <span className="text-slate-400 text-xs font-mono w-4">#{index + 1}</span>
-                        {/* Added whitespace-nowrap to prevent long drug names from breaking onto multiple lines */}
-                        <div className="flex items-center gap-2 text-sm font-medium text-slate-700 whitespace-nowrap">
-                          <span className="line-through text-slate-400">{selectedDrugToRemove}</span>
-                          <ArrowRight className="w-4 h-4 text-slate-300" />
-                          <span className="text-indigo-700">{rec.drug}</span>
-                        </div>
-                      </div>
-                      
-                      {/* Dynamic Risk Badge */}
-                      <div className={`flex items-center gap-1 px-2 py-1 rounded text-sm font-bold border whitespace-nowrap ${
-                        isReduction ? 'text-emerald-600 bg-emerald-50 border-emerald-100' : 
-                        isIncrease ? 'text-red-600 bg-red-50 border-red-100' : 
-                        'text-slate-600 bg-slate-50 border-slate-200'
-                      }`}>
-                        {isReduction ? <TrendingDown className="w-4 h-4" /> : 
-                         isIncrease ? <TrendingUp className="w-4 h-4" /> : 
-                         <Minus className="w-4 h-4" />}
-                        {newRiskPct.toFixed(2)}%
+                return (
+                  <div key={rec.drug} className="p-3 flex items-center justify-between hover:bg-slate-50 transition-colors bg-white">
+                    <div className="flex items-center gap-3">
+                      <span className="text-slate-400 text-xs font-mono w-4">#{index + 1}</span>
+                      <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
+                        <span className="line-through text-slate-400">{selectedDrugToRemove}</span>
+                        <ArrowRight className="w-4 h-4 text-slate-300" />
+                        <span className="text-indigo-700">{rec.drug}</span>
                       </div>
                     </div>
-                  );
-                })}
-              </div>
+                    
+                    {/* Dynamic Risk Badge */}
+                    <div className={`flex items-center gap-1 px-2 py-1 rounded text-sm font-bold border ${
+                      isReduction ? 'text-emerald-600 bg-emerald-50 border-emerald-100' : 
+                      isIncrease ? 'text-red-600 bg-red-50 border-red-100' : 
+                      'text-slate-600 bg-slate-50 border-slate-200'
+                    }`}>
+                      {isReduction ? <TrendingDown className="w-4 h-4" /> : 
+                       isIncrease ? <TrendingUp className="w-4 h-4" /> : 
+                       <Minus className="w-4 h-4" />}
+                      {newRiskPct.toFixed(2)}%
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
