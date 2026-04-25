@@ -29,7 +29,7 @@ export function TopNavigation({ searchTerm, onSearchChange }: TopNavigationProps
             <div>
               <div className="text-xs text-slate-500">Binary Risk Model</div>
               <div className="text-sm text-slate-900 font-medium">Severe but Recoverable</div>
-              <div className="text-sm text-slate-900 font-medium">vs Critical/Permanen</div>
+              <div className="text-sm text-slate-900 font-medium">vs Critical/Permanent</div>
             </div>
           </div>
         </div>
