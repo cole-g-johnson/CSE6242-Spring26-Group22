@@ -28,7 +28,7 @@ export function TopNavigation({ searchTerm, onSearchChange }: TopNavigationProps
             <Activity className="w-5 h-5 text-slate-600" />
             <div>
               <div className="text-xs text-slate-500">Binary Risk Model</div>
-              <div className="text-sm text-slate-900 font-medium">Severe vs Non-Severe</div>
+              <div className="text-sm text-slate-900 font-medium">Severe but Recoverable vs Critical/Permanen</div>
             </div>
           </div>
         </div>
